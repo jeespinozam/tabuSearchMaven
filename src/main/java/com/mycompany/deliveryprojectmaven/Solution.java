@@ -11,9 +11,9 @@ package com.mycompany.deliveryprojectmaven;
  */
 public class Solution {
     int i,j;
-    int value;
+    double value;
     
-    public Solution(int i, int j, int value){
+    public Solution(int i, int j, double value){
        this.i = i;
        this.j = j;
        this.value = value;

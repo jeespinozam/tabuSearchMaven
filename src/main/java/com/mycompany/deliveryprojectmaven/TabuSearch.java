@@ -6,6 +6,7 @@
 package com.mycompany.deliveryprojectmaven;
 
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.JFrame;
 import org.math.plot.*;
 
@@ -22,7 +23,7 @@ public class TabuSearch {
     int problemSize;
 
     private int[] bestSolution;
-    private int bestCost;
+    private double bestCost;
 
     double[] x;
     double[] y;
@@ -30,7 +31,7 @@ public class TabuSearch {
     public TabuSearch(Matrix matrix) {
         this.matrix = matrix;
         problemSize = matrix.getEdgeCount();
-        numberOfIterations = problemSize * 10;
+        numberOfIterations = problemSize * 1000;
 
         tabuList = new TabuList(problemSize);
         setupCurrentSolution();
@@ -75,7 +76,7 @@ public class TabuSearch {
                     int [] tempSolution = new int[currSolution.length];
                     System.arraycopy(currSolution, 0, tempSolution, 0, tempSolution.length);
                     swap(tempSolution, j, k);
-                    int currCost = matrix.calculateDistance(tempSolution);
+                    double currCost = matrix.calculateDistance(tempSolution);
                     currCost += tabuList.getValue(k, j);
                     soluciones.add(new Solution(j, k, currCost));
                 }
@@ -91,7 +92,7 @@ public class TabuSearch {
         return false;
     }
     
-    public void invoke() {
+    public void invoke(String path, boolean plot) {
         
         int numberOfIterationsWithSameBestCost = 0;
         boolean isLocalMaximum = false;
@@ -108,12 +109,15 @@ public class TabuSearch {
             int city1 = 0;
             int city2 = 0;
             
+            
             //get the neighbour 
             ArrayList<Solution> soluciones = BestNeighBourSolutionLocator();
             
             //choose the best (choose the less negative too) and (not tabu or verify aspiration criteria)
-            soluciones.sort(new SolutionComparator());
-            int index = 0;
+//            soluciones.sort(new SolutionComparator());
+            Random r = new Random();
+            int index = r.nextInt(soluciones.size());
+            soluciones.get(index);
             city1 = soluciones.get(index).i;
             city2 = soluciones.get(index).j;
             
@@ -123,7 +127,7 @@ public class TabuSearch {
                     break;
                 };
                 
-                index++;
+                index = r.nextInt(soluciones.size());
                 
                 city1 = soluciones.get(index).i;
                 city2 = soluciones.get(index).j;
@@ -136,7 +140,7 @@ public class TabuSearch {
             
             //if not tabu -> swap and select it as best solution and increment the tabu
             swap(currSolution, city1, city2);
-            int currCost = soluciones.get(index).value;
+            double currCost = soluciones.get(index).value;
             if ((currCost < bestCost)) {
                 System.arraycopy(currSolution, 0, bestSolution, 0, bestSolution.length);
                 bestCost = currCost;
@@ -150,7 +154,7 @@ public class TabuSearch {
                 tabuList.decrementTabu();
             }
             
-            //other stop condition
+//            other stop condition
             if(numberOfIterationsWithSameBestCost>=100){
                 isLocalMaximum = true;
                 break;
@@ -169,8 +173,9 @@ public class TabuSearch {
             printSolution(bestSolution);
         }
         
-        plotIteration();
-        
+        ParserInput parser = new ParserInput();
+        parser.printFile(path, bestSolution, bestCost);
+        if (plot) plotIteration();
     }
     
     private void plotIteration(){
@@ -190,7 +195,7 @@ public class TabuSearch {
         }
         
         plot.addLinePlot("Iteración vs Costo", tempx, tempy);
-        JFrame frame = new JFrame("a plot panel");
+        JFrame frame = new JFrame("Panel");
         frame.setContentPane(plot);
         frame.setSize(800, 800);
         frame.setVisible(true);

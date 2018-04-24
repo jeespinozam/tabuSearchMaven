@@ -24,17 +24,17 @@ public class Matrix {
         generateBooleanMatrix(size);
     }
 
-    public Matrix(double[][] matrix) {
-        edgeCount = matrix.length;
-        this.matrix = new double[edgeCount][edgeCount];
-        for (int i = 0; i < edgeCount; i++) {
-            for (int j = 0; j < edgeCount; j++) {
-                this.matrix[i][j] = matrix[i][j];
-            }
-        }
-    }
+//    public Matrix(double[][] matrix) {
+//        edgeCount = matrix.length;
+//        this.matrix = new double[edgeCount][edgeCount];
+//        for (int i = 0; i < edgeCount; i++) {
+//            for (int j = 0; j < edgeCount; j++) {
+//                this.matrix[i][j] = matrix[i][j];
+//            }
+//        }
+//    }
     
-    public Matrix(double[][] matrix, int[][]boolean_matrix) {
+    public Matrix(double[][] matrix) {
         edgeCount = matrix.length;
         this.matrix = new double[edgeCount][edgeCount];
         for (int i = 0; i < edgeCount; i++) {
@@ -108,8 +108,8 @@ public class Matrix {
     }
 
     //función objetivo
-    public int calculateDistance(int solution[]) {
-        int cost = 0;
+    public double calculateDistance(int solution[]) {
+        double cost = 0.0;
         for (int i = 0; i < solution.length - 1; i++) {
 //            System.out.println("La solution[" + i + "]: " + solution[i]);
 //            System.out.println("La solution[" + (i + 1) + "]: " + solution[i+1]);

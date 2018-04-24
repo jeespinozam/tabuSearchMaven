@@ -4,7 +4,7 @@
 package com.mycompany.deliveryprojectmaven;
 
 import java.util.ArrayList;
-import javax.swing.JFrame;
+import java.util.Scanner;
 
 /**
  *
@@ -18,64 +18,35 @@ public class DeliveryProject {
     public static void main(String[] args) {
 
         // leyendo archivo
-        ParserInput parser = new ParserInput();
-        ArrayList<Cliente> clientes = parser.readFile("A-n32-k5.vrp");
-        double[][] d = parser.getDistanceMatrix(clientes);
-        
-        /*
-        int[][] d = new int[][]{{0 , 1 , 3 , 99, 5 },
-                                {1 , 0 , 99, 4 , 8 },
-                                {3 , 1 , 0 , 5 , 1 },
-                                {4 , 4 , 5 , 0 , 99},
-                                {5 , 8 , 99, 99, 0 }};
-        */
-        int[][] x = new int[][]{{0 , 1 , 1 , 0 , 1 },
-                                {1 , 0 , 0 , 1 , 1 },
-                                {1 , 0 , 0 , 1 , 0 },
-                                {0 , 1 , 1 , 0 , 0 },
-                                {1 , 1 , 0 , 0 , 0 }};
-        
-        // Matrix matrix_d = new Matrix(32);
-        Matrix matrix_d = new Matrix(d,x);
-        
-        System.out.println("Matrix de distancias:");
-        matrix_d.printMatrix();
-        
-        int[] solution = new int[matrix_d.getEdgeCount()+1]; //+1 for the depart as the last route
-        
-        //Simple Initial Solution  
-        solution[0] = 0; solution[matrix_d.getEdgeCount()]= 0; //begin and end in the depart
-        for (int i = 1; i < solution.length - 1; i++) {
-            solution[i]= i;
+        int numberOfFiles = 67; //numero de mapas
+        int NUM_TEST = 1; //numero de intentos por cada mapa
+        String [] paths = new String[numberOfFiles];
+        for (int i = 0; i < numberOfFiles; i++) {
+            paths[i]= i + ".vrp";
         }
         
-        
-        System.out.println("Solución inicial:");
-        for (int i = 0; i < solution.length; i++) {
-            System.out.print(solution[i] + " ");
+        for (int i = 0; i < paths.length; i++) {
+            for (int j = 0; j < NUM_TEST ; j++) {
+                ParserInput parser = new ParserInput();
+                ArrayList<Cliente> clientes = parser.readFile(paths[i]);
+                double[][] d = parser.getDistanceMatrix(clientes);
+
+                Matrix matrix_d = new Matrix(d);
+                System.out.println("Matrix de distancias:");
+                matrix_d.printMatrix();
+
+                TabuSearch tabuSearch = new TabuSearch(matrix_d);
+                Long start = System.currentTimeMillis();
+                tabuSearch.invoke(paths[i], true);
+                Long stop = System.currentTimeMillis() - start;
+                System.out.println(String.format("Tamaño: %d\t Tiempo: %d ",matrix_d.getEdgeCount(),stop));
+            }
+            
+            Scanner in = new Scanner(System.in);
+            System.out.print("Enter para continuar: ");
+            String continuar = in.nextLine();      
+            
         }
-        System.out.println("");
-        double costo_ini = matrix_d.calculateDistance(solution);
-        System.out.println("Costo inicial = " + costo_ini + "\n"); 
-        
-        TabuSearch tabuSearch = new TabuSearch(matrix_d);
-        Long start = System.currentTimeMillis();
-        tabuSearch.invoke();
-        Long stop = System.currentTimeMillis() - start;
-        System.out.println(String.format("Tamaño: %d\t Tiempo: %d ",matrix_d.getEdgeCount(),stop));
-        
-        
-//        int size = 10;
-//        while (size < 100) {
-//            Matrix matrix_d = new Matrix(size);
-//            matrix_d.printMatrix();
-//            TabuSearch tabuSearch = new TabuSearch(matrix_d);
-//            Long start = System.currentTimeMillis();
-//            tabuSearch.invoke();
-//            Long stop = System.currentTimeMillis() - start;
-//            System.out.println(String.format("Rozmiar: %d\t czas: %d ",size,stop));
-//            size +=10;
-//        }
     }
     
 }

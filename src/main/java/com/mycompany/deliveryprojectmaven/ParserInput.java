@@ -6,9 +6,12 @@
 package com.mycompany.deliveryprojectmaven;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
@@ -38,7 +41,7 @@ public class ParserInput {
             String line;
             boolean ignorar;
             // HashMap<Integer, Locacion> locacionesMap;
-            int nNodos = 0;
+            int nNodos = 31;
             int iNodo = 0;
             int x,y;
             int i,j;
@@ -49,14 +52,14 @@ public class ParserInput {
                     break;
                 if (line.startsWith("DIMENSION : ")) {
                     line = line.replace("DIMENSION : ", "");
-                    nNodos = Integer.parseInt(line);
+//                    nNodos = Integer.parseInt(line);
                 }
                 else if (line.startsWith("CAPACITY : ") && iNodo == 0) {
                     line = line.replace("CAPACITY : ", "");
                     capacidad = Integer.parseInt(line);
                     // ignoramos el tipo de vehiculo por ahora
                 }
-                else if (line.startsWith("NODE_COORD_SECTION ")) {
+                else if (line.startsWith("NODE_COORD_SECTION ") || line.startsWith("NODE_COORD_SECTION")) {
                     for (iNodo = 0; iNodo < nNodos; iNodo++) {
                         String [] tokens;
                         String nombre;
@@ -71,7 +74,7 @@ public class ParserInput {
                         clientes.add(nuevoCliente);
                     }
                 }
-                else if (line.startsWith("DEMAND_SECTION ")) {
+                else if (line.startsWith("DEMAND_SECTION ") || line.startsWith("DEMAND_SECTION")) {
                     for (iNodo = 0; iNodo < nNodos; iNodo++) {
                         String[] tokens;
                         String nombre;
@@ -99,6 +102,53 @@ public class ParserInput {
             System.out.println("Error de entrada de datos");
             System.out.print(ex.getMessage());
             return null;
+        }
+    }
+    
+    
+    public void printFile(String pathOrigin, int[] solution, double cost){
+        String path = "output.csv";
+        FileWriter fw = null;
+        BufferedWriter bw = null;
+        PrintWriter out = null;
+        try {
+            fw = new FileWriter(path,true);
+            bw = new BufferedWriter(fw);;
+            out = new PrintWriter(bw);
+            String tokens;
+            tokens = pathOrigin.substring(0, pathOrigin.indexOf('.'));
+            
+            String salida = tokens + "," + Double.toString(cost);
+            for (int i = 0; i < solution.length; i++) {
+                salida +=  "," + Integer.toString(solution[i]);
+            }
+            salida += '\n';
+            out.append(salida);
+            out.close();
+        } catch(FileNotFoundException ex) {
+            System.out.println("Archivo no encontrado ...");
+            System.out.println(ex.getMessage());
+        }
+        catch(IOException ex) {
+            System.out.println("Error de entrada de datos");
+            System.out.print(ex.getMessage());
+        }
+        finally {
+            if (out != null) {
+                out.close();
+            } //exception handling left as an exercise for the reader
+            try {
+                if(bw != null)
+                    bw.close();
+            } catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
+            try {
+                if(fw != null)
+                    fw.close();
+            } catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
         }
     }
 }
