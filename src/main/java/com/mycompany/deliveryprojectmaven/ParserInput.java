@@ -20,6 +20,10 @@ import java.util.ArrayList;
  */
 public class ParserInput {
     
+//    public double [][] getDemand(ArrayList<Cliente> clientes){
+//        
+//    }
+    
     public double [][] getDistanceMatrix(ArrayList<Cliente> clientes) {
         double [][] distances = new double[clientes.size()][clientes.size()];
         double distance = 0;

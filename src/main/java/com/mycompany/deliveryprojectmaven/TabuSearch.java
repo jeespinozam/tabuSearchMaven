@@ -92,6 +92,11 @@ public class TabuSearch {
         return false;
     }
     
+    private boolean isAceptable(){
+        
+        return true;
+    }
+    
     public void invoke(String path, boolean plot) {
         
         int numberOfIterationsWithSameBestCost = 0;
@@ -122,7 +127,6 @@ public class TabuSearch {
             city2 = soluciones.get(index).j;
             
             while(index<soluciones.size() && isTabu(city1, city2)){
-                System.out.println("En el while papu");
                 if(aspirationCriteriaIsApplied(soluciones.get(index))){
                     break;
                 };
@@ -141,7 +145,7 @@ public class TabuSearch {
             //if not tabu -> swap and select it as best solution and increment the tabu
             swap(currSolution, city1, city2);
             double currCost = soluciones.get(index).value;
-            if ((currCost < bestCost)) {
+            if (isAceptable() && (currCost < bestCost)) {
                 System.arraycopy(currSolution, 0, bestSolution, 0, bestSolution.length);
                 bestCost = currCost;
                 
@@ -154,7 +158,7 @@ public class TabuSearch {
                 tabuList.decrementTabu();
             }
             
-//            other stop condition
+//          Local solution stop condition
             if(numberOfIterationsWithSameBestCost>=100){
                 isLocalMaximum = true;
                 break;

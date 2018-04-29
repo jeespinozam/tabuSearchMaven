@@ -15,6 +15,7 @@ public class Matrix {
     private int MAX_COST = 9999;
     private double[][] matrix;
     private int[][] boolean_matrix;
+    private double[][] demand;
     private int edgeCount;
 
     public Matrix(int size) {
@@ -71,17 +72,7 @@ public class Matrix {
     }
 
     public void generateBooleanMatrix(int size) {
-//        Random random = new Random();
-//        this.boolean_matrix = new int[size][size];
-//        for (int i = 0; i < size; i++) {
-//            for (int j = 0; j < size; j++) {
-//                this.boolean_matrix[i][j] = random.nextInt(1);
-//                
-//                if(this.boolean_matrix[i][j]==0){
-//                    this.boolean_matrix[i][j]= MAX_COST;
-//                }
-//            }
-//        }
+
         this.boolean_matrix = new int[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {

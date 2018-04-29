@@ -29,9 +29,10 @@ public class DeliveryProject {
             for (int j = 0; j < NUM_TEST ; j++) {
                 ParserInput parser = new ParserInput();
                 ArrayList<Cliente> clientes = parser.readFile(paths[i]);
-                double[][] d = parser.getDistanceMatrix(clientes);
-
-                Matrix matrix_d = new Matrix(d);
+                double[][] distances = parser.getDistanceMatrix(clientes);
+//                double[][] demands = parser.getDemand(clientes);
+                
+                Matrix matrix_d = new Matrix(distances);
                 System.out.println("Matrix de distancias:");
                 matrix_d.printMatrix();
 
